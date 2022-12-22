@@ -6,7 +6,7 @@ import os
 def impute(df, col_name):
     for ind in df.index:
         if np.isnan(df[col_name][ind]):
-            temp = df[col_name].iloc[ind - 5:ind + 5].dropna()
+            temp = df[col_name].iloc[ind - 3:ind + 5].dropna()
             df[col_name][ind] = temp.mean()
 
 
@@ -71,8 +71,6 @@ def loop_through_years(years):
              'conditions']]
         data = get_data(data)
         data = data.rename(columns={'datetime' : 'Time Stamp'})
-        data['load'] = 0.0
-
         directory = r"C:\Users\petar\Desktop\ISIS\Training Data\NYS Load  Data"
         data['Time Stamp'] = pd.to_datetime(data['Time Stamp'], format='%Y-%m-%dT%H:%M:%S')
 
