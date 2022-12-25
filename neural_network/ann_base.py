@@ -3,13 +3,13 @@ from re import VERBOSE
 
 EPOCH_NUMBER = 100
 BATCH_SIZE_NUMBER = 1
-COST_FUNCTION = 'mean_squared_error'
+COST_FUNCTION = 'mean_absolute_error'
 OPTIMIZER = 'adam'
 KERNEL_INITIALIZER = 'normal'
 ACTIVATION_FUNCTION = 'sigmoid'
-NUMBER_OF_HIDDEN_LAYERS = 2
-NUMBER_OF_NEURONS_IN_FIRST_HIDDEN_LAYER = 4
-NUMBER_OF_NEURONS_IN_OTHER_HIDDEN_LAYERS = 2
+NUMBER_OF_HIDDEN_LAYERS = 3
+NUMBER_OF_NEURONS_IN_FIRST_HIDDEN_LAYER = 10
+NUMBER_OF_NEURONS_IN_OTHER_HIDDEN_LAYERS = 5
 VERBOSE = 2
 
 class AnnBase:
@@ -22,8 +22,8 @@ class AnnBase:
         self.kernel_initializer = KERNEL_INITIALIZER
         self.activation_function = ACTIVATION_FUNCTION        
         self.number_of_hidden_layers = NUMBER_OF_HIDDEN_LAYERS
-        self.number_of_neurons_in_first_hidden_layer = 20
-        self.number_of_neurons_in_other_hidden_layers = 8
+        self.number_of_neurons_in_first_hidden_layer = NUMBER_OF_NEURONS_IN_FIRST_HIDDEN_LAYER
+        self.number_of_neurons_in_other_hidden_layers = NUMBER_OF_NEURONS_IN_OTHER_HIDDEN_LAYERS
         self.verbose = VERBOSE
 
     @property

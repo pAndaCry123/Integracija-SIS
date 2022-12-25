@@ -2,30 +2,29 @@ import pandas as pd
 import numpy as np
 import os
 
-
 def impute(df, col_name):
     for ind in df.index:
         if np.isnan(df[col_name][ind]):
-            temp = df[col_name].iloc[ind - 3:ind + 5].dropna()
+            temp = df[col_name].iloc[ind - 5:ind + 20].dropna()
             df[col_name][ind] = temp.mean()
 
 
 def above(df, col_name):
     for ind in df.index:
-        if df[col_name][ind] > 100:
+        if abs(df[col_name][ind]) > 60:
             temp = df[col_name].iloc[ind - 10:ind - 1].mean()
             df[col_name][ind] = temp
 
 
 def get_data(frame_data):
     frame_data['datetime'] = pd.to_datetime(frame_data['datetime'])
-    columns = ['temp', 'humidity', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility']
+    columns = ['temp', 'humidity', 'feelslike', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility']
 
     for col in columns:
         impute(frame_data, col)
 
     above(frame_data, 'temp')
-
+    above(frame_data, 'feelslike')
     return frame_data
 
 
@@ -67,7 +66,7 @@ def loop_through_years(years):
         path_year = '../Training Data/NYS Weather Data/New York City, NY/New York City, ... {}-01-01 to {}-12-31.csv'.format(year,year)
         data_frame = pd.read_csv(path_year)
         data = data_frame[
-            ['datetime', 'temp', 'humidity', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility',
+            ['datetime', 'temp', 'feelslike', 'humidity', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility',
              'conditions']]
         data = get_data(data)
         data = data.rename(columns={'datetime' : 'Time Stamp'})
