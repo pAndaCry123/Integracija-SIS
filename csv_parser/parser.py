@@ -5,26 +5,31 @@ import os
 def impute(df, col_name):
     for ind in df.index:
         if np.isnan(df[col_name][ind]):
-            temp = df[col_name].iloc[ind - 5:ind + 20].dropna()
+            temp = df[col_name].iloc[ind:ind +10].dropna()
             df[col_name][ind] = temp.mean()
 
+def impute_before(df, col_name):
+    for ind in df.index:
+        if np.isnan(df[col_name][ind]):
+            temp = df[col_name].iloc[ind-5:ind +10].dropna()
+            df[col_name][ind] = temp.mean()
 
 def above(df, col_name):
     for ind in df.index:
         if abs(df[col_name][ind]) > 60:
-            temp = df[col_name].iloc[ind - 10:ind - 1].mean()
+            temp = df[col_name].iloc[ind - 10:ind].mean()
             df[col_name][ind] = temp
 
 
 def get_data(frame_data):
     frame_data['datetime'] = pd.to_datetime(frame_data['datetime'])
-    columns = ['temp', 'humidity', 'feelslike', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility']
+    columns = ['humidity', 'feelslike', 'windgust', 'windspeed','winddir', 'sealevelpressure', 'cloudcover', 'visibility']
 
     for col in columns:
         impute(frame_data, col)
+    for col in columns:
+        impute_before(frame_data, col)
 
-    above(frame_data, 'temp')
-    above(frame_data, 'feelslike')
     return frame_data
 
 
@@ -66,16 +71,29 @@ def loop_through_years(years):
         path_year = '../Training Data/NYS Weather Data/New York City, NY/New York City, ... {}-01-01 to {}-12-31.csv'.format(year,year)
         data_frame = pd.read_csv(path_year)
         data = data_frame[
-            ['datetime', 'temp', 'feelslike', 'humidity', 'windgust', 'windspeed', 'sealevelpressure', 'cloudcover', 'visibility',
+            ['datetime', 'temp', 'feelslike', 'humidity', 'windgust', 'windspeed','winddir', 'sealevelpressure', 'cloudcover', 'visibility',
              'conditions']]
         data = get_data(data)
         data = data.rename(columns={'datetime' : 'Time Stamp'})
-        directory = r"C:\Users\petar\Desktop\ISIS\Training Data\NYS Load  Data"
+        dir = '../Training Data/NYS Load  Data'
+        #directory = r"C:\Users\petar\Desktop\ISIS\Training Data\NYS Load  Data"
         data['Time Stamp'] = pd.to_datetime(data['Time Stamp'], format='%Y-%m-%dT%H:%M:%S')
 
-        result_for_year = cover_loads_for_explicit_year(data,directory,year)
+        result_for_year = cover_loads_for_explicit_year(data,dir,year)
         result_for_year.to_csv('packed_data_{}.csv'.format(year))
 
+
+def loop_through_year(data_frame):
+
+        data = data_frame[
+            ['datetime', 'temp', 'feelslike', 'humidity', 'windgust', 'windspeed','winddir', 'sealevelpressure', 'cloudcover', 'visibility',
+             'conditions']]
+        data = get_data(data)
+        data = data.rename(columns={'datetime' : 'Time Stamp'})
+
+        data['Time Stamp'] = pd.to_datetime(data['Time Stamp'], format='%Y-%m-%dT%H:%M:%S')
+
+        return data
 
 if __name__ == '__main__':
 

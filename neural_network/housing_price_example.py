@@ -6,11 +6,10 @@ from ann_regression import AnnRegression
 from custom_plotting import CustomPloting
 from custom_preparer import CustomPreparer
 from scorer import Scorer
-from csv_parser.models import return_all_elements
-NUMBER_OF_COLUMNS = 23
+from csv_parser.weather_model import return_all_elements
+NUMBER_OF_COLUMNS = 28
 SHARE_FOR_TRAINING = 0.85
 
-import  pandas as pd
 # load the dataset
 #dataframe = pandas.read_csv('housing.csv', engine='python', sep=';', header=None)
 elements = return_all_elements()
@@ -31,7 +30,7 @@ trainX, trainY, testX, testY = preparer.prepare_for_training()
 # make predictions
 
 ann_regression = AnnRegression()
-time_begin = time.time();
+time_begin = time.time()
 trainPredict, testPredict = ann_regression.compile_fit_predict(trainX, trainY, testX)
 time_end = time.time()
 print('Training duration: ' + str((time_end - time_begin)) + ' seconds')
@@ -39,11 +38,15 @@ print('Training duration: ' + str((time_end - time_begin)) + ' seconds')
 # invert predictions
 trainPredict, trainY, testPredict, testY = preparer.inverse_transform(trainPredict, testPredict)
 
+print(trainPredict)
+print("---------------------")
+print(trainY)
+print('---------------------')
 # calculate root mean squared error
 scorer = Scorer()
 trainScore, testScore = scorer.get_absolute(trainY, trainPredict, testY, testPredict)
-print('Train Score: %.2f RMSE' % (trainScore))
-print('Test Score: %.2f RMSE' % (testScore))
+print('Train Score: %.2f RAMSE' % (trainScore))
+print('Test Score: %.2f RAMSE' % (testScore))
 
 # plotting
 custom_plotting = CustomPloting()
